@@ -116,7 +116,7 @@ export class Maybe<T> implements IMaybe<T>{
 
     //  Constructor
 
-    constructor(private _type: MaybeType, private _value, guard: any){
+    constructor(private _type: MaybeType, private _value: T | undefined, guard: any){
         if(guard !== Maybe._guard){
             throw new Error("Direct contruction of Maybe not possible. Please use Maybe.just, Maybe.nothing or Maybe.nullToMaybe instead.");
         }
@@ -181,7 +181,7 @@ export class Maybe<T> implements IMaybe<T>{
         if(this.isNothing){
             throw new Error("Unable to access value of a nothing Maybe. Use defaultTo instead.");
         }
-        return this._value;
+        return this._value!;
     }
     /**
      * indicates if this is a Nothing Maybe
@@ -202,7 +202,7 @@ export class Maybe<T> implements IMaybe<T>{
         if(this.isNothing){
             return Maybe.nothing<TOut>();
         }
-        return Maybe.nullToMaybe(selector(this._value));
+        return Maybe.nullToMaybe(selector(this._value!));
     }
 
     /**
@@ -215,7 +215,7 @@ export class Maybe<T> implements IMaybe<T>{
         if(this.isNothing){
             return Maybe.nothing<TOut>();
         }
-        return Maybe.justAllowNull(selector(this._value));
+        return Maybe.justAllowNull(selector(this._value!));
     }
 
     /**
@@ -226,7 +226,7 @@ export class Maybe<T> implements IMaybe<T>{
      */
     public do(action: (value: T) => void): IMaybe<T>{
         if(!this.isNothing){
-            action(this._value);
+            action(this._value!);
         }
 
         return this;
@@ -287,7 +287,7 @@ export class Maybe<T> implements IMaybe<T>{
             return Maybe.nothing<TOut>();
         }
 
-        return selector(this._value);
+        return selector(this._value!);
     }
     
     /**
@@ -313,7 +313,7 @@ export class Maybe<T> implements IMaybe<T>{
             return defaultValue;
         }
 
-        return this._value;
+        return this._value!;
     }
 
     /**
@@ -324,7 +324,7 @@ export class Maybe<T> implements IMaybe<T>{
     public filter(predicate: (value: T) => boolean): IMaybe<T>{
         if(this.isNothing){
             return this;
-        } else if(!predicate(this._value)){
+        } else if(!predicate(this._value!)){
             return Maybe.nothing<T>();
         }
 

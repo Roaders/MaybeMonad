@@ -6,7 +6,7 @@
         "sourceMap": true,
         "outDir": "",
         "declaration": true,
-        "strictNullChecks": true
+        "strict": true
     },
     "include": [
         "src/**/*.ts"
