@@ -15,10 +15,16 @@ export interface IMaybe<T>{
      * It is recommended to use defaultTo instead so that a default value can be provided for the Nothing case
      */
     readonly value: T;
+
     /**
      * indicates if this is a Nothing Maybe
      */
     readonly isNothing: boolean;
+    
+    /**
+     * indicates if this maybe has a value
+     */
+    readonly hasValue: boolean;
 
     /**
      * maps a maybe to another value
@@ -96,6 +102,21 @@ export interface IMaybe<T>{
      * @param predicate 
      */
     filter(predicate: (value: T) => boolean): IMaybe<T>;
+
+    /**
+     * Throws a mesage with the specified message if the Maybe is nothing
+     * 
+     * @param message - the message to throw
+     */
+    throwIfNothing(message: string): void;
+
+    /**
+     * Throws a mesage with the specified message if the Maybe is nothing
+     * if not returns the value
+     * 
+     * @param message - the message to throw
+     */
+    throwIfNothingValue(message: string): T;
     
     /**
      * Combines multiple Maybes into one Maybe with a value of an array of all the maybe values
@@ -183,11 +204,19 @@ export class Maybe<T> implements IMaybe<T>{
         }
         return this._value!;
     }
+
     /**
      * indicates if this is a Nothing Maybe
      */
     public get isNothing(): boolean{
         return this._type === MaybeType.Nothing;
+    }
+    
+    /**
+     * indicates if this is a Value Maybe
+     */
+    public get hasValue(): boolean{
+        return this._type === MaybeType.Just;
     }
 
     //  Public Methods
@@ -347,4 +376,26 @@ export class Maybe<T> implements IMaybe<T>{
         return Maybe.nullToMaybe(maybes.map(m => m.value));
     }
 
+    /**
+     * Throws an error if the maybe isNothing
+     * 
+     * @param message error message to throw if isNothing is true
+     */
+    public throwIfNothing(message: string){
+        if(this.isNothing){
+            throw new Error(message);
+        }
+    }
+
+    /**
+     * Throws an error with the specified message if this maybe is nothing
+     * If there is a value it is returned.
+     * 
+     * @param message error message to throw if isNothing is true
+     */
+    public throwIfNothingValue(message: string): T{
+        this.throwIfNothing(message);
+
+        return this._value!;
+    }
 }

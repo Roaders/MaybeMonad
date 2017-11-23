@@ -48,6 +48,7 @@ describe("Maybe", () => {
 
             expect(maybe.value).toEqual("Hello");
             expect(maybe.isNothing).toBeFalsy();
+            expect(maybe.hasValue).toBeTruthy();
         });
 
         it("should construct a valid Maybe with a given value of null", () => {
@@ -55,6 +56,7 @@ describe("Maybe", () => {
 
             expect(maybe.value).toEqual(null);
             expect(maybe.isNothing).toBeFalsy();
+            expect(maybe.hasValue).toBeTruthy();
         });
 
         it("should construct a valid Maybe with a given value of undefined", () => {
@@ -62,6 +64,7 @@ describe("Maybe", () => {
 
             expect(maybe.value).toEqual(undefined);
             expect(maybe.isNothing).toBeFalsy();
+            expect(maybe.hasValue).toBeTruthy();
         });
     });
 
@@ -73,18 +76,21 @@ describe("Maybe", () => {
             const maybe = Maybe.nothing<string>();
 
             expect(maybe.isNothing).toBeTruthy();
+            expect(maybe.hasValue).toBeFalsy();
         });
 
         it("should construct a nothing Maybe with a type of null", () => {
             const maybe = Maybe.nothing<null>();
 
             expect(maybe.isNothing).toBeTruthy();
+            expect(maybe.hasValue).toBeFalsy();
         });
 
         it("should construct a nothing Maybe with a type of undefined", () => {
             const maybe = Maybe.nothing<undefined>();
 
             expect(maybe.isNothing).toBeTruthy();
+            expect(maybe.hasValue).toBeFalsy();
         });
 
         it("should throw an error when value is accessed on a nothing maybe", () => {
@@ -580,7 +586,7 @@ describe("Maybe", () => {
 
         it("should return a valid maybe when combined with 5 valid maybes", () => {
             let maybe = stringMaybe.combine(numberMaybe, booleanMaybe, nullMaybe, undefinedMaybe, dateMaybe);
-        
+
             expect(maybe.isNothing).toBeFalsy();
 
             //  check array value types
@@ -594,7 +600,7 @@ describe("Maybe", () => {
 
         it("should return a nothing maybe when nothing combined with 5 valid maybes", () => {
             let maybe = Maybe.nothing<string>().combine(numberMaybe, booleanMaybe, nullMaybe, undefinedMaybe, dateMaybe);
-        
+
             expect(maybe.isNothing).toBeTruthy();
 
             //  check array value types
@@ -608,7 +614,7 @@ describe("Maybe", () => {
 
         it("should return a nothing maybe when combined with 5 valid maybes, the first of which is nothing", () => {
             let maybe = stringMaybe.combine(Maybe.nothing<number>(), booleanMaybe, nullMaybe, undefinedMaybe, dateMaybe);
-        
+
             expect(maybe.isNothing).toBeTruthy();
 
             //  check array value types
@@ -622,7 +628,7 @@ describe("Maybe", () => {
 
         it("should return a nothing maybe when combined with 5 valid maybes, the second of which is nothing", () => {
             let maybe = stringMaybe.combine(numberMaybe, Maybe.nothing<boolean>(), nullMaybe, undefinedMaybe, dateMaybe);
-        
+
             expect(maybe.isNothing).toBeTruthy();
 
             //  check array value types
@@ -636,7 +642,7 @@ describe("Maybe", () => {
 
         it("should return a nothing maybe when combined with 5 valid maybes, the third of which is nothing", () => {
             let maybe = stringMaybe.combine(numberMaybe, booleanMaybe, Maybe.nothing<null>(), undefinedMaybe, dateMaybe);
-        
+
             expect(maybe.isNothing).toBeTruthy();
 
             //  check array value types
@@ -650,7 +656,7 @@ describe("Maybe", () => {
 
         it("should return a nothing maybe when combined with 5 valid maybes, the forth of which is nothing", () => {
             let maybe = stringMaybe.combine(numberMaybe, booleanMaybe, nullMaybe, Maybe.nothing<undefined>(), dateMaybe);
-        
+
             expect(maybe.isNothing).toBeTruthy();
 
             //  check array value types
@@ -664,7 +670,7 @@ describe("Maybe", () => {
 
         it("should return a nothing maybe when combined with 5 valid maybes, the last of which is nothing", () => {
             let maybe = stringMaybe.combine(numberMaybe, booleanMaybe, nullMaybe, undefinedMaybe, Maybe.nothing<Date>());
-        
+
             expect(maybe.isNothing).toBeTruthy();
 
             //  check array value types
@@ -678,4 +684,27 @@ describe("Maybe", () => {
 
     });
 
-})
+    describe("throwIfNothing", () => {
+        it("should throw error if called on a nothing Maybe", () => {
+            expect(() => Maybe.nothing().throwIfNothing("expected error")).toThrowError("expected error");
+        });
+
+        it("should not throw error if called on a value Maybe", () => {
+            expect(() => Maybe.justAllowNull("test").throwIfNothing("expected error")).not.toThrow();
+        });
+    });
+
+    describe("throwIfNothingValue", () => {
+        it("should throw error if called on a nothing Maybe", () => {
+            expect(() => Maybe.nothing().throwIfNothingValue("expected error")).toThrowError("expected error");
+        });
+
+        it("should not throw error if called on a value Maybe", () => {
+            expect(() => Maybe.justAllowNull("test").throwIfNothingValue("expected error")).not.toThrow();
+        });
+
+        it("should return value if called on a value Maybe", () => {
+            expect(Maybe.justAllowNull("test").throwIfNothingValue("expected error")).toEqual("test");
+        });
+    });
+});
