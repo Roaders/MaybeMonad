@@ -11,3 +11,5 @@ typings/**/*
 *.js.map
 
 index\.js
+
+*.js
