@@ -1,5 +1,5 @@
 
-import { maybeBoolean, maybeNumber, maybeString, maybeDate, maybeParseFloat, maybeParseDate } from "../index";
+import { maybeBoolean, maybeNumber, maybeString, maybeDate, maybeParseFloat, maybeParseDate, maybeParseBoolean } from "../index";
 
 describe("Maybe Helper", () => {
 
@@ -125,6 +125,45 @@ describe("Maybe Helper", () => {
 
         it("should return a nothing maybe when undefined is passed as a value", () => {
             expect(maybeBoolean(undefined).isNothing).toBeTruthy();
+        });
+    });
+
+
+    describe("maybeParseBoolean", () => {
+
+        it("should return a nothing maybe when a string is passed as a value", () => {
+            expect(maybeParseBoolean("hello").isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when a number is passed as a value", () => {
+            expect(maybeParseBoolean(123).isNothing).toBeTruthy();
+        });
+
+        it("should return a value maybe when a boolean is passed as a value", () => {
+            expect(maybeParseBoolean(true).isNothing).toBeFalsy();
+            expect(maybeParseBoolean(true).value).toEqual(true);
+        });
+
+        it("should return a value maybe when 'true' is passed as a value", () => {
+            expect(maybeParseBoolean('true').isNothing).toBeFalsy();
+            expect(maybeParseBoolean('true').value).toEqual(true);
+        });
+
+        it("should return a value maybe when 'false' is passed as a value", () => {
+            expect(maybeParseBoolean('false').isNothing).toBeFalsy();
+            expect(maybeParseBoolean('false').value).toEqual(false);
+        });
+
+        it("should return a nothing maybe when an object is passed as a value", () => {
+            expect(maybeParseBoolean({}).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when null is passed as a value", () => {
+            expect(maybeParseBoolean(null).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when undefined is passed as a value", () => {
+            expect(maybeParseBoolean(undefined).isNothing).toBeTruthy();
         });
     });
 

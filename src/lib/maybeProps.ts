@@ -1,5 +1,7 @@
 
-import { Maybe, IMaybe } from "./maybe"
+import { Maybe, IMaybe } from "./maybe";
+import { maybeBoolean, maybeParseDate, maybeParseFloat, maybeString } from "./maybeHelpers";
+import { maybeNumber, maybeDate } from "../index";
 
 export type MaybeProps<T> = {
     [P in keyof T]: IMaybe<T[P]>;
@@ -10,17 +12,38 @@ export type MaybePropFactory<T> = {
 }
 
 export function objectToMaybeProps<T>(input: T, maybeFactories: MaybePropFactory<T>): MaybeProps<T> {
-    const result = {} as MaybeProps<T>;
+    const result: any = {};
 
-    console.log(`Maybe props for ${JSON.stringify(input)}`);
+    for (let propName in maybeFactories) {
+        const factoryValue = maybeFactories[propName];
+        const inputValue = input[propName];
 
-    for(let propName in maybeFactories){
-        console.log(`creating maybe for ${input[propName]}`);
+        switch (typeof maybeFactories[propName]) {
+            case "string":
+                result[propName] = maybeString(inputValue);
+                break;
 
-        result[propName] = Maybe.nullToMaybe(input[propName]);
+            case "number":
+                result[propName] = maybeNumber(inputValue);
+                break;
+
+            case "boolean":
+                result[propName] = maybeBoolean(inputValue);
+                break;
+
+            case "function":
+                const factoryFunction = factoryValue as (value: any) => Maybe<any>;
+                result[propName] = factoryFunction(inputValue);
+                break;
+
+            default:
+                if(factoryValue instanceof Date){
+                    result[propName] = maybeDate(inputValue);
+                } else {
+                    result[propName] = Maybe.nullToMaybe(inputValue);
+                }
+        }
     }
-
-    console.log(`output ${JSON.stringify(result)}`);
 
     return result;
 }
