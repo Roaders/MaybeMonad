@@ -1,5 +1,5 @@
 
-import { maybeBoolean, maybeNumber, maybeString } from "../index";
+import { maybeBoolean, maybeNumber, maybeString, maybeDate, maybeParseFloat, maybeParseDate } from "../index";
 
 describe("Maybe Helper", () => {
 
@@ -42,6 +42,10 @@ describe("Maybe Helper", () => {
             expect(maybeNumber(123).value).toBe(123);
         });
 
+        it("should return a nothing maybe when NaN is passed as a value", () => {
+            expect(maybeNumber(NaN).isNothing).toBeTruthy();
+        });
+
         it("should return a nothing maybe when a boolean is passed as a value", () => {
             expect(maybeNumber(true).isNothing).toBeTruthy();
         });
@@ -56,6 +60,43 @@ describe("Maybe Helper", () => {
 
         it("should return a nothing maybe when undefined is passed as a value", () => {
             expect(maybeNumber(undefined).isNothing).toBeTruthy();
+        });
+    });
+
+    describe("maybeParseFloat", () => {
+
+        it("should return a nothing maybe when a non-valid string is passed as a value", () => {
+            expect(maybeParseFloat("hello").isNothing).toBeTruthy();
+        });
+
+        it("should return a value maybe when a number is passed as a value", () => {
+            expect(maybeParseFloat(123).isNothing).toBeFalsy();
+            expect(maybeParseFloat(123).value).toBe(123);
+        });
+
+        it("should return a value maybe when a valid string is passed as a value", () => {
+            expect(maybeParseFloat("123.45").isNothing).toBeFalsy();
+            expect(maybeParseFloat("123.45").value).toBe(123.45);
+        });
+
+        it("should return a nothing maybe when NaN is passed as a value", () => {
+            expect(maybeParseFloat(NaN).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when a boolean is passed as a value", () => {
+            expect(maybeParseFloat(true).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when an object is passed as a value", () => {
+            expect(maybeParseFloat({}).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when null is passed as a value", () => {
+            expect(maybeParseFloat(null).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when undefined is passed as a value", () => {
+            expect(maybeParseFloat(undefined).isNothing).toBeTruthy();
         });
     });
 
@@ -84,6 +125,85 @@ describe("Maybe Helper", () => {
 
         it("should return a nothing maybe when undefined is passed as a value", () => {
             expect(maybeBoolean(undefined).isNothing).toBeTruthy();
+        });
+    });
+
+    describe("maybeDate", () => {
+
+        it("should return a nothing maybe when a string is passed as a value", () => {
+            expect(maybeDate("hello").isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when a number is passed as a value", () => {
+            expect(maybeDate(123).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when a boolean is passed as a value", () => {
+            expect(maybeDate(true).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when an object is passed as a value", () => {
+            expect(maybeDate({}).isNothing).toBeTruthy();
+        });
+
+        it("should return a value maybe when an valid date is passed as a value", () => {
+            const date = new Date();
+            expect(maybeDate(date).isNothing).toBeFalsy();
+            expect(maybeDate(date).value.getTime()).toBe(date.getTime());
+        });
+
+        it("should return a nothing maybe when an invalid date is passed as a value", () => {
+            expect(maybeDate(new Date(Date.parse("this is not a date"))).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when null is passed as a value", () => {
+            expect(maybeDate(null).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when undefined is passed as a value", () => {
+            expect(maybeDate(undefined).isNothing).toBeTruthy();
+        });
+    });
+
+    describe("maybeParseDate", () => {
+
+        it("should return a nothing maybe when a string is passed as a value", () => {
+            expect(maybeParseDate("hello").isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when a number is passed as a value", () => {
+            expect(maybeParseDate(123).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when a boolean is passed as a value", () => {
+            expect(maybeParseDate(true).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when an object is passed as a value", () => {
+            expect(maybeParseDate({}).isNothing).toBeTruthy();
+        });
+
+        it("should return a value maybe when an valid date is passed as a value", () => {
+            const date = new Date();
+            expect(maybeParseDate(date).isNothing).toBeFalsy();
+            expect(maybeParseDate(date).value.getTime()).toBe(date.getTime());
+        });
+
+        it("should return a value maybe when an valid string is passed as a value", () => {
+            expect(maybeParseDate("Dec 25, 1995").isNothing).toBeFalsy();
+            expect(maybeParseDate("Dec 25, 1995").value.getTime()).not.toBeNaN();
+        });
+
+        it("should return a nothing maybe when an invalid date is passed as a value", () => {
+            expect(maybeParseDate(new Date(Date.parse("this is not a date"))).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when null is passed as a value", () => {
+            expect(maybeParseDate(null).isNothing).toBeTruthy();
+        });
+
+        it("should return a nothing maybe when undefined is passed as a value", () => {
+            expect(maybeParseDate(undefined).isNothing).toBeTruthy();
         });
     });
 });
