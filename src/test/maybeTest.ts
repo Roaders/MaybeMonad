@@ -575,6 +575,33 @@ describe("Maybe", () => {
         });
     });
 
+    describe("filterType", () => {
+
+        let maybe: IMaybe<string | null>;
+
+        function helloFilterFunction(value: any): value is string {
+            return typeof value === "string";
+        }
+
+        it("should leave a valid maybe unchanged if filter expression returns true", () => {
+            maybe = Maybe.nullToMaybe(returnUnknownType("Hello"));
+
+            const filteredMaybe = maybe.filterType(helloFilterFunction);
+
+            expect(filteredMaybe.isNothing).toBeFalsy();
+            expect(filteredMaybe.value).toEqual("Hello");
+        });
+
+        it("should change maybe to nothing if filter expression returns false", () => {
+            maybe = Maybe.justAllowNull(null);
+
+            const filteredMaybe = maybe.filterType(helloFilterFunction);
+
+            expect(filteredMaybe.isNothing).toBeTruthy();
+            expect(() => filteredMaybe.value).toThrow();
+        });
+    });
+
     describe("combine", () => {
 
         const stringMaybe = Maybe.nullToMaybe("Hello");

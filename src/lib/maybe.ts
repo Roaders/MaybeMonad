@@ -104,6 +104,17 @@ export interface IMaybe<T>{
     filter(predicate: (value: T) => boolean): IMaybe<T>;
 
     /**
+     * turns the maybe into a nothing maybe if the value is not of the specified type
+     * also changes the type of the maybe
+     * for example this could turn Maybe<string | number> into Maybe<string>
+     * 
+     * Maybe.just(stringOrNumber).filterType(<(value) => value is string>(value => typeof value === 'string'))
+     * 
+     * @param predicate
+     */
+    filterType<TOut>(predicate: (value: any) => value is TOut ): IMaybe<TOut>
+
+    /**
      * Throws a mesage with the specified message if the Maybe is nothing
      * 
      * @param message - the message to throw
@@ -351,13 +362,22 @@ export class Maybe<T> implements IMaybe<T>{
      * @param predicate 
      */
     public filter(predicate: (value: T) => boolean): IMaybe<T>{
-        if(this.isNothing){
-            return this;
-        } else if(!predicate(this._value!)){
-            return Maybe.nothing<T>();
-        }
 
-        return this;
+        return this.and(v => predicate(v) ? this : Maybe.nothing<T>());
+    }
+
+
+    /**
+     * turns the maybe into a nothing maybe if the value is not of the specified type
+     * also changes the type of the maybe
+     * for example this could turn Maybe<string | number> into Maybe<string>
+     * 
+     * Maybe.just(stringOrNumber).filterType(<(value) => value is string>(value => typeof value === 'string'))
+     * 
+     * @param predicate
+     */
+    filterType<TOut>(predicate: (value: any) => value is TOut): IMaybe<TOut> {
+        return this.and(v => predicate(v) ? Maybe.justAllowNull(v) : Maybe.nothing<TOut>());
     }
 
     /**
