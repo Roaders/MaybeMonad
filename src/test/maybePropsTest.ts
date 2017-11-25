@@ -1,5 +1,5 @@
 
-import { objectToMaybeProps, MaybePropFactory, Maybe, IMaybe, maybeParseFloat, maybeParseDate, maybeParseBoolean } from "../index"
+import { objectToMaybeProps, MaybePropFactory, Maybe, maybeParseFloat, maybeParseDate, maybeParseBoolean } from "../index"
 
 describe("MaybeProps", () => {
 
@@ -128,14 +128,14 @@ describe("MaybeProps", () => {
         });
     });
 
-    function validateValueMaybe(maybe: IMaybe<any>, expectedValue: any) {
+    function validateValueMaybe(maybe: Maybe<any>, expectedValue: any) {
         expect(maybe).toBeDefined("Maybe was not defined");
         expect(maybe.hasValue).toBeTruthy("Maybe was expected to have a value but did not");
         expect(maybe.value).toBe(expectedValue);
 
     }
 
-    function validateNothingMaybe(maybe: IMaybe<any>) {
+    function validateNothingMaybe(maybe: Maybe<any>) {
         expect(maybe).toBeDefined("Maybe was not defined");
         expect(maybe.isNothing).toBeTruthy("Maybe was expected to be nothing bit had a value");
     }

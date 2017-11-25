@@ -1,14 +1,14 @@
 
-import { Maybe, IMaybe } from "./maybe";
+import { Maybe } from "./maybe";
 import { maybeBoolean, maybeParseDate, maybeParseFloat, maybeString } from "./maybeHelpers";
 import { maybeNumber, maybeDate } from "../index";
 
 export type MaybeProps<T> = {
-    [P in keyof T]: IMaybe<T[P]>;
+    [P in keyof T]: Maybe<T[P]>;
 }
 
 export type MaybePropFactory<T> = {
-    [P in keyof T]: ((value: T[P]) => IMaybe<T[P]>) | T[P];
+    [P in keyof T]: ((value: T[P]) => Maybe<T[P]>) | T[P];
 }
 
 export function objectToMaybeProps<T>(input: T, maybeFactories: MaybePropFactory<T>): MaybeProps<T> {

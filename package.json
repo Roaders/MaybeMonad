@@ -10,7 +10,7 @@
     "test": "jasmine",
     "push": "git push origin && git push origin --tags",
     "prestart": "npm run build",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "start": "node example/example.js"
   },
   "repository": {

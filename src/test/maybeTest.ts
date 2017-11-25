@@ -1,6 +1,6 @@
 
 
-import { Maybe, MaybeType, IMaybe } from "../index";
+import { MaybeType, Maybe } from "../index";
 
 describe("Maybe", () => {
 
@@ -185,7 +185,7 @@ describe("Maybe", () => {
 
     describe("map", () => {
 
-        let maybe: IMaybe<string>;
+        let maybe: Maybe<string>;
 
         beforeEach(() => {
             maybe = Maybe.nullToMaybe("Hello");
@@ -198,7 +198,7 @@ describe("Maybe", () => {
 
                 expect(mappedMaybe.isNothing).toBeFalsy();
                 expect(mappedMaybe.value).toEqual("Goodbye");
-                //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+                //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
                 expect(mappedMaybe.value.length).toBe(7);
             });
 
@@ -206,7 +206,7 @@ describe("Maybe", () => {
                 const mappedMaybe = maybe.map(v => returnUnknownType(null));
 
                 expect(mappedMaybe.isNothing).toBeTruthy();
-                //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+                //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
                 expect(() => mappedMaybe.value.length).toThrow();
             });
 
@@ -214,7 +214,7 @@ describe("Maybe", () => {
                 const mappedMaybe = maybe.map(v => returnUnknownType(undefined));
 
                 expect(mappedMaybe.isNothing).toBeTruthy();
-                //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | undefined>
+                //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | undefined>
                 expect(() => mappedMaybe.value.length).toThrow();
             });
 
@@ -298,7 +298,7 @@ describe("Maybe", () => {
 
             expect(maybe.isNothing).toBeFalsy();
             expect(maybe.value).toEqual("Hello");
-            //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+            //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
             expect(maybe.value.length).toBe(5);
         });
 
@@ -308,7 +308,7 @@ describe("Maybe", () => {
 
             expect(maybe.isNothing).toBeFalsy();
             expect(maybe.value).toEqual("Goodbye");
-            //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+            //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
             expect(maybe.value.length).toBe(7);
         });
 
@@ -319,7 +319,7 @@ describe("Maybe", () => {
 
             expect(maybe.isNothing).toBeFalsy();
             expect(maybe.value).toEqual("Hello");
-            //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+            //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
             expect(maybe.value.length).toBe(5);
         });
 
@@ -329,7 +329,7 @@ describe("Maybe", () => {
 
             expect(maybe.isNothing).toBeFalsy();
             expect(maybe.value).toEqual("Hello");
-            //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+            //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
             expect(maybe.value.length).toBe(5);
         });
 
@@ -339,7 +339,7 @@ describe("Maybe", () => {
                 .orElse(returnUnknownType(null));
 
             expect(maybe.isNothing).toBeTruthy();
-            //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+            //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
             expect(() => maybe.value.length).toThrow();
         });
 
@@ -348,7 +348,7 @@ describe("Maybe", () => {
                 .orElse(returnUnknownType(undefined));
 
             expect(maybe.isNothing).toBeTruthy();
-            //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+            //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
             expect(() => maybe.value.length).toThrow();
         });
 
@@ -416,7 +416,7 @@ describe("Maybe", () => {
             functionExecuted = false;
         })
 
-        function createMaybe(value: number): IMaybe<number> {
+        function createMaybe(value: number): Maybe<number> {
             functionExecuted = true;
 
             if (isNaN(value)) {
@@ -443,7 +443,7 @@ describe("Maybe", () => {
 
             expect(maybe.isNothing).toBeTruthy();
             expect(functionExecuted).toBeFalsy();
-            //  No compile errors here as maybe is typed as IMaybe<number>
+            //  No compile errors here as maybe is typed as Maybe<number>
             expect(() => maybe.value.toString()).toThrow();
         });
 
@@ -453,7 +453,7 @@ describe("Maybe", () => {
 
             expect(maybe.isNothing).toBeTruthy();
             expect(functionExecuted).toBeTruthy();
-            //  No compile errors here as maybe is typed as IMaybe<number>
+            //  No compile errors here as maybe is typed as Maybe<number>
             expect(() => maybe.value.toString()).toThrow();
         });
 
@@ -463,7 +463,7 @@ describe("Maybe", () => {
 
             expect(maybe.isNothing).toBeTruthy();
             expect(functionExecuted).toBeFalsy();
-            //  No compile errors here as maybe is typed as IMaybe<number>
+            //  No compile errors here as maybe is typed as Maybe<number>
             expect(() => maybe.value.toString()).toThrow();
         });
     });
@@ -476,7 +476,7 @@ describe("Maybe", () => {
 
             expect(maybe.isNothing).toBeFalsy();
             expect(maybe.value).toEqual("Hello");
-            //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+            //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
             expect(maybe.value.length).toBe(5);
         });
 
@@ -486,7 +486,7 @@ describe("Maybe", () => {
 
             expect(maybe.isNothing).toBeFalsy();
             expect(maybe.value).toEqual("Hello");
-            //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+            //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
             expect(maybe.value.length).toBe(5);
         });
 
@@ -496,7 +496,7 @@ describe("Maybe", () => {
 
             expect(maybe.isNothing).toBeFalsy();
             expect(maybe.value).toEqual("Goodbye");
-            //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+            //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
             expect(maybe.value.length).toBe(7);
         });
 
@@ -505,7 +505,7 @@ describe("Maybe", () => {
                 .or(Maybe.nothing<string>());
 
             expect(maybe.isNothing).toBeTruthy();
-            //  No compile errors here as mappedMaybe is typed as IMaybe<string> not IMaybe<string | null>
+            //  No compile errors here as mappedMaybe is typed as Maybe<string> not Maybe<string | null>
             expect(() => maybe.value.length).toThrow();
         });
     });
@@ -550,7 +550,7 @@ describe("Maybe", () => {
 
     describe("filter", () => {
 
-        let maybe: IMaybe<string>;
+        let maybe: Maybe<string>;
 
         function helloFilterFunction(value: string): boolean {
             return value === "Hello";
@@ -577,7 +577,7 @@ describe("Maybe", () => {
 
     describe("filterType", () => {
 
-        let maybe: IMaybe<string | null>;
+        let maybe: Maybe<string | null>;
 
         function helloFilterFunction(value: any): value is string {
             return typeof value === "string";
