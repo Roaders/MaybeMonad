@@ -9,11 +9,11 @@ export type nullOrUndefined = null | undefined;
 
 export class Maybe<T>{
 
-    private static _guard: any = {};
+    protected static _guard: any = {};
 
     //  Constructor
 
-    constructor(private _type: MaybeType, private _value: T | undefined, guard: any) {
+    constructor(protected _type: MaybeType, protected _value: T | undefined, guard: any) {
         if (guard !== Maybe._guard) {
             throw new Error("Direct contruction of Maybe not possible. Please use Maybe.just, Maybe.nothing or Maybe.nullToMaybe instead.");
         }
