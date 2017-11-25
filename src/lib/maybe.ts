@@ -13,8 +13,8 @@ export class Maybe<T>{
 
     //  Constructor
 
-    constructor(private _type: MaybeType, private _value: T | undefined, guard: any){
-        if(guard !== Maybe._guard){
+    constructor(private _type: MaybeType, private _value: T | undefined, guard: any) {
+        if (guard !== Maybe._guard) {
             throw new Error("Direct contruction of Maybe not possible. Please use Maybe.just, Maybe.nothing or Maybe.nullToMaybe instead.");
         }
     }
@@ -27,7 +27,7 @@ export class Maybe<T>{
      * Example: var maybe = Maybe.justAllowNull(null);
      * @param value 
      */
-    public static justAllowNull<T>(value: T): Maybe<T>{
+    public static justAllowNull<T>(value: T): Maybe<T> {
         return new Maybe<T>(MaybeType.Just, value, Maybe._guard);
     }
 
@@ -35,7 +35,7 @@ export class Maybe<T>{
      * Creates a Nothing Maybe of the given type
      * Example: var maybe = Maybe.nothing<string>();
      */
-    public static nothing<T>(): Maybe<T>{
+    public static nothing<T>(): Maybe<T> {
         return new Maybe<T>(MaybeType.Nothing, undefined, Maybe._guard);
     }
 
@@ -45,8 +45,8 @@ export class Maybe<T>{
      * Example: var maybe = Maybe.nullToMaybe("Hello maybe world");
      * @param value 
      */
-    public static nullToMaybe<T>(value: T | nullOrUndefined): Maybe<T>{
-        if(value == null){
+    public static nullToMaybe<T>(value: T | nullOrUndefined): Maybe<T> {
+        if (value == null) {
             return Maybe.nothing<T>();
         }
         return new Maybe<T>(MaybeType.Just, value, Maybe._guard);
@@ -60,12 +60,12 @@ export class Maybe<T>{
      * @param test 
      * @param value 
      */
-    public static if<T>(test: boolean, value: T | nullOrUndefined): Maybe<T>{
-        if(!test){
+    public static if<T>(test: boolean, value: T | nullOrUndefined): Maybe<T> {
+        if (!test) {
             return Maybe.nothing<T>();
         }
         return Maybe.nullToMaybe(value);
-    } 
+    }
 
     //  Properties
 
@@ -74,8 +74,8 @@ export class Maybe<T>{
      * This will throw an error if called on a Nothing Maybe
      * It is recommended to use defaultTo instead so that a default value can be provided for the Nothing case
      */
-    public get value(): T{
-        if(this.isNothing){
+    public get value(): T {
+        if (this.isNothing) {
             throw new Error("Unable to access value of a nothing Maybe. Use defaultTo instead.");
         }
         return this._value!;
@@ -84,14 +84,14 @@ export class Maybe<T>{
     /**
      * indicates if this is a Nothing Maybe
      */
-    public get isNothing(): boolean{
+    public get isNothing(): boolean {
         return this._type === MaybeType.Nothing;
     }
-    
+
     /**
      * indicates if this is a Value Maybe
      */
-    public get hasValue(): boolean{
+    public get hasValue(): boolean {
         return this._type === MaybeType.Just;
     }
 
@@ -103,8 +103,8 @@ export class Maybe<T>{
      * Example: Maybe.nullToMaybe("Hello").map(value => value.length);
      * @param selector 
      */
-    public map<TOut>(selector: (value: T) => TOut | nullOrUndefined): Maybe<TOut>{
-        if(this.isNothing){
+    public map<TOut>(selector: (value: T) => TOut | nullOrUndefined): Maybe<TOut> {
+        if (this.isNothing) {
             return Maybe.nothing<TOut>();
         }
         return Maybe.nullToMaybe(selector(this._value!));
@@ -116,8 +116,8 @@ export class Maybe<T>{
      * Example: Maybe.nullToMaybe("Hello").mapAllowNull(value => null);
      * @param selector 
      */
-    public mapAllowNull<TOut>(selector: (value: T) => TOut): Maybe<TOut>{
-        if(this.isNothing){
+    public mapAllowNull<TOut>(selector: (value: T) => TOut): Maybe<TOut> {
+        if (this.isNothing) {
             return Maybe.nothing<TOut>();
         }
         return Maybe.justAllowNull(selector(this._value!));
@@ -129,8 +129,8 @@ export class Maybe<T>{
      * Example: Maybe.nullToMaybe("Hello world").do(message => console.log(message));
      * @param action 
      */
-    public do(action: (value: T) => void): Maybe<T>{
-        if(!this.isNothing){
+    public do(action: (value: T) => void): Maybe<T> {
+        if (!this.isNothing) {
             action(this._value!);
         }
 
@@ -143,8 +143,8 @@ export class Maybe<T>{
      * Example: Maybe.nullToMaybe(null).elseDo(() => console.log("no message found"));
      * @param action 
      */
-    public elseDo(action: () => void ): Maybe<T>{
-        if(this.isNothing){
+    public elseDo(action: () => void): Maybe<T> {
+        if (this.isNothing) {
             action();
         }
 
@@ -158,8 +158,8 @@ export class Maybe<T>{
      * Example: Maybe.nothing<string>().orElse("GoodBye"); (returns maybe with value of 'Goodbye')
      * @param value 
      */
-    public orElse(value: T | nullOrUndefined): Maybe<T>{
-        if(this.isNothing){
+    public orElse(value: T | nullOrUndefined): Maybe<T> {
+        if (this.isNothing) {
             return Maybe.nullToMaybe(value);
         }
 
@@ -173,8 +173,8 @@ export class Maybe<T>{
      * Example: Maybe.nothing<string>().orElse(null); (returns maybe with null value)
      * @param value 
      */
-    public orElseAllowNull(value: T): Maybe<T>{
-        if(this.isNothing){
+    public orElseAllowNull(value: T): Maybe<T> {
+        if (this.isNothing) {
             return Maybe.justAllowNull(value);
         }
 
@@ -187,21 +187,21 @@ export class Maybe<T>{
      * Example: Maybe.nullToMaybe(thing.parameterOne).and(paramOneValue => Maybe.nullToMaybe(thing.parameterTwo)) (return maybe with value of arameterTwo)
      * @param selector 
      */
-    public and<TOut>(selector: (value: T) => Maybe<TOut>): Maybe<TOut>{
-        if(this.isNothing){
+    public and<TOut>(selector: (value: T) => Maybe<TOut>): Maybe<TOut> {
+        if (this.isNothing) {
             return Maybe.nothing<TOut>();
         }
 
         return selector(this._value!);
     }
-    
+
     /**
      * If maybe is nothing return the other maybe;
      * Example: Maybe.nothing<string>().or(Maybe.nullToMaybe("here I am")) (return maybe with value "here I am");
      * @param other 
      */
-    public or(other: Maybe<T>): Maybe<T>{
-        if(this.isNothing){
+    public or(other: Maybe<T>): Maybe<T> {
+        if (this.isNothing) {
             return other;
         }
 
@@ -213,8 +213,8 @@ export class Maybe<T>{
      * Example: Maybe.nothing<string>().defaultTo("I am the default") (return a string of value "I am the default!")
      * @param defaultValue 
      */
-    public defaultTo<TDefault>(defaultValue: TDefault): T | TDefault{
-        if(this.isNothing){
+    public defaultTo<TDefault>(defaultValue: TDefault): T | TDefault {
+        if (this.isNothing) {
             return defaultValue;
         }
 
@@ -226,7 +226,7 @@ export class Maybe<T>{
      * Example: Maybe.nullToMaybe("").filter(value => value != "")
      * @param predicate 
      */
-    public filter(predicate: (value: T) => boolean): Maybe<T>{
+    public filter(predicate: (value: T) => boolean): Maybe<T> {
 
         return this.and(v => predicate(v) ? this : Maybe.nothing<T>());
     }
@@ -251,8 +251,13 @@ export class Maybe<T>{
      * Example: Maybe.nullToMaybe("Hello").combine(Maybe.nullToMaybe("World")).do(array => console.log(array[0] + " " + array[1])) (logs "Hello World")
      * @param maybes 
      */
-    public combine(... maybes: Maybe<any>[]): Maybe<any>{
-        if(this.isNothing || maybes.some(v => v.isNothing)){
+    combine<TOne>(maybeOne: Maybe<TOne>): Maybe<[T, TOne]>;
+    combine<TOne, TTwo>(maybeOne: Maybe<TOne>, maybeTwo: Maybe<TTwo>): Maybe<[T, TOne, TTwo]>;
+    combine<TOne, TTwo, TThree>(maybeOne: Maybe<TOne>, maybeTwo: Maybe<TTwo>, maybeThree: Maybe<TThree>): Maybe<[T, TOne, TTwo, TThree]>;
+    combine<TOne, TTwo, TThree, TFour>(maybeOne: Maybe<TOne>, maybeTwo: Maybe<TTwo>, maybeThree: Maybe<TThree>, maybeFour: Maybe<TFour>): Maybe<[T, TOne, TTwo, TThree, TFour]>;
+    combine<TOne, TTwo, TThree, TFour, TFive>(maybeOne: Maybe<TOne>, maybeTwo: Maybe<TTwo>, maybeThree: Maybe<TThree>, maybeFour: Maybe<TFour>, maybeFive: Maybe<TFive>): Maybe<[T, TOne, TTwo, TThree, TFour, TFive]>;
+    public combine(...maybes: Maybe<any>[]): Maybe<any> {
+        if (this.isNothing || maybes.some(v => v.isNothing)) {
             return Maybe.nothing<any>();
         }
 
@@ -266,8 +271,8 @@ export class Maybe<T>{
      * 
      * @param message error message to throw if isNothing is true
      */
-    public throwIfNothing(message: string){
-        if(this.isNothing){
+    public throwIfNothing(message: string) {
+        if (this.isNothing) {
             throw new Error(message);
         }
     }
@@ -278,7 +283,7 @@ export class Maybe<T>{
      * 
      * @param message error message to throw if isNothing is true
      */
-    public throwIfNothingValue(message: string): T{
+    public throwIfNothingValue(message: string): T {
         this.throwIfNothing(message);
 
         return this._value!;
