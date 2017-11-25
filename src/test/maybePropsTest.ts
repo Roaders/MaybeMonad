@@ -1,5 +1,13 @@
 
-import { objectToMaybeProps, MaybePropFactory, Maybe, maybeParseFloat, maybeParseDate, maybeParseBoolean } from "../index"
+import {
+    objectToMaybeProps,
+    MaybePropFactory,
+    Maybe,
+    maybeParseFloat,
+    maybeParseDate,
+    maybeParseBoolean,
+    maybePropsToMaybeObject
+} from "../index"
 
 describe("MaybeProps", () => {
 
@@ -127,6 +135,28 @@ describe("MaybeProps", () => {
             expect(props.myDate.value.getTime()).not.toBeNaN();
         });
     });
+
+    describe("maybePropsToMaybeObject", () => {
+
+        it("should convert a maybeProps object with all value maybes into one maybe with a value", () => {
+            const props = objectToMaybeProps(populatedObject, maybePropFactory);
+
+            const outputMaybe = maybePropsToMaybeObject(props);
+
+            expect(outputMaybe.hasValue).toBeTruthy();
+            expect(outputMaybe.value).toEqual(populatedObject);
+        });
+
+        it("should convert a maybeProps object with a single nothing maybe property into one nothing maybe", () => {
+            const missingPropObject = {... populatedObject, sampleString: undefined};
+            const props = objectToMaybeProps(<any>missingPropObject, maybePropFactory);
+
+            const outputMaybe = maybePropsToMaybeObject(props);
+
+            expect(outputMaybe.isNothing).toBeTruthy();
+        });
+        
+    })
 
     function validateValueMaybe(maybe: Maybe<any>, expectedValue: any) {
         expect(maybe).toBeDefined("Maybe was not defined");

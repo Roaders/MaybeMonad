@@ -18,7 +18,7 @@ export function objectToMaybeProps<T>(input: T, maybeFactories: MaybePropFactory
         const factoryValue = maybeFactories[propName];
         const inputValue = input[propName];
 
-        switch (typeof maybeFactories[propName]) {
+        switch (typeof factoryValue) {
             case "string":
                 result[propName] = maybeString(inputValue);
                 break;
@@ -45,5 +45,19 @@ export function objectToMaybeProps<T>(input: T, maybeFactories: MaybePropFactory
         }
     }
 
-    return result;
+    return result as MaybeProps<T>;
+}
+
+export function maybePropsToMaybeObject<T>(props: MaybeProps<T>): Maybe<T>{
+    const result: T = <any>{};
+
+    for(let propName in props){
+        if(props[propName].isNothing){
+            return Maybe.nothing();
+        }
+
+        result[propName] = props[propName].value;
+    }
+
+    return Maybe.justAllowNull(result);
 }
