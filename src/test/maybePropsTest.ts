@@ -20,21 +20,24 @@ describe("MaybeProps", () => {
         sampleString: string,
         sampleNumber: number,
         sampleBoolean: boolean,
-        sampleObject: IMyInterface
+        sampleObject: IMyInterface,
+        sampleDate: Date
     }
 
     const populatedObject: ISampleObjectType = {
         sampleString: "hello",
         sampleNumber: 123,
         sampleBoolean: true,
-        sampleObject: { id: 0, name: "John" }
+        sampleObject: { id: 0, name: "John" },
+        sampleDate: new Date()
     }
 
     const maybePropFactory: MaybePropFactory<ISampleObjectType> = {
         sampleString: "",
         sampleNumber: 0,
         sampleBoolean: true,
-        sampleObject: { name: "", id: 0 }
+        sampleObject: { name: "", id: 0 },
+        sampleDate: new Date()
     };
 
     it("should convert every property on a populated object into a value maybe", () => {
